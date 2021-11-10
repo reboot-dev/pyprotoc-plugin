@@ -14,7 +14,6 @@ def _get_proto_sources(context):
 
 
 def _generate_output_names(context, proto_file):
-
     file_path = proto_file.basename
     if proto_file.basename.endswith(".proto"):
         file_path = file_path[:-len(".proto")]
@@ -68,13 +67,14 @@ def _protoc_plugin_rule_implementation(context):
     for proto_file in proto_files:
     
         if len(proto_file.owner.workspace_root) == 0:
-            # Local file
+            # Handle case where `proto_file` is a local file.
             args += [
                 "-I" + ".",
                 proto_file.short_path,
             ]
         elif _virtual_imports in proto_file.path:
-            # Generated file in virtual imports
+            # Handle case where `proto_file` is a generated file file in
+            # `_virtual_imports`.
             before, after = proto_file.path.split(_virtual_imports)
             import_path = before + _virtual_imports + after.split('/')[0] + "/"
             args += [
