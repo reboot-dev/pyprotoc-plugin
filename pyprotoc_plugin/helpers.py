@@ -59,7 +59,10 @@ def add_template_path(path: str) -> None:
         if len(p)
     )
 
-    print('Adding template path: %s' % os.path.abspath(path), file=sys.stderr)
+    print(
+        f'Adding template path: {os.path.abspath(new_template_path)}',
+        file=sys.stderr
+    )
 
     os.environ[ENV_TEMPLATE_PATH] = new_template_path
 
