@@ -24,7 +24,7 @@ def repos(external = True, repo_mapping = {}):
         git_repository(
             name = "com_github_reboot_dev_pyprotoc_plugin",
             remote = "https://github.com/reboot-dev/pyprotoc-plugin",
-            commit = "783da28eb7a8a3ea5989307f95cedcf4fb9135f9",
-            shallow_since = "1636487639 -0800",
+            commit = "3ca906e29826024ab0d025695d4a54959b93f159",
+            shallow_since = "1636571507 +0100",
             repo_mapping = repo_mapping,
         )
