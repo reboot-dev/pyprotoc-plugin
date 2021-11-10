@@ -30,13 +30,18 @@ def resolve_template_path(template_name: str) -> str:
     ]
 
     if len(valid_paths) == 0:
-        print([os.path.abspath(path)
-               for path in
-               [
-            os.path.join(path_segment, template_name)
-            for path_segment in
-            template_path.split(':')
-        ]])
+        print(
+            [
+                os.path.abspath(path)
+                for path in
+                [
+                    os.path.join(path_segment, template_name)
+                    for path_segment in
+                    template_path.split(':')
+                ]
+            ],
+            file=sys.stderr
+        )
         raise RuntimeError(f'Template {template_name} could not be resolved.')
 
     return valid_paths[0]
@@ -54,7 +59,10 @@ def add_template_path(path: str) -> None:
         if len(p)
     )
 
-    print('Adding template path: %s', os.path.abspath(path), file=sys.stderr)
+    print(
+        f'Adding template path: {os.path.abspath(new_template_path)}',
+        file=sys.stderr
+    )
 
     os.environ[ENV_TEMPLATE_PATH] = new_template_path
 
