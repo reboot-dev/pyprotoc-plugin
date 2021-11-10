@@ -36,17 +36,17 @@ def _declare_outputs(context, proto_files):
     output_files = []
 
     for proto_file in proto_files:
+        if len(proto_file.owner.workspace_root) != 0:
+            continue
+
         for output_file in _generate_output_names(context, proto_file):
             output_files.append(
                 context.actions.declare_file(
                     output_file, sibling=proto_file
                 )
             )
-            # ToDo: Remove this limit
-            # break
 
     return output_files
-
 
 def _protoc_plugin_rule_implementation(context):
     proto_files = _get_proto_sources(context)
@@ -64,10 +64,31 @@ def _protoc_plugin_rule_implementation(context):
         "--%s_out" % plugin_short_name, output_directory,
     ]
 
-    args += [
-        proto_file.path
-        for proto_file in proto_files
-    ]
+    _virtual_imports = '/_virtual_imports/'
+    for proto_file in proto_files:
+    
+        if len(proto_file.owner.workspace_root) == 0:
+            # Local file
+            args += [
+                "-I" + ".",
+                proto_file.short_path,
+            ]
+        elif _virtual_imports in proto_file.path:
+            # Generated file in virtual imports
+            before, after = proto_file.path.split(_virtual_imports)
+            import_path = before + _virtual_imports + after.split('/')[0] + "/"
+            args += [
+                "-I" + import_path,
+                proto_file.path.replace(import_path, ""),
+            ]
+        else:
+            fail(
+                "Handling this type of (generated?) .proto file " \
+                + "was not forseen and is not implemented. " \
+                + "Please create an issue at " \
+                + "https://github.com/reboot-dev/pyprotoc-plugin/issues " \
+                + "with your proto file and we will have a look!"
+            )
 
     context.actions.run_shell(
         outputs=output_files,
