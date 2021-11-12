@@ -35,7 +35,8 @@ def _declare_outputs(context, proto_files):
     output_files = []
 
     for proto_file in proto_files:
-        if len(proto_file.owner.workspace_root) != 0:
+        if len(proto_file.owner.workspace_root) != 0 \
+           and not proto_file.path.startswith('external'):
             continue
 
         for output_file in _generate_output_names(context, proto_file):
@@ -52,25 +53,35 @@ def _protoc_plugin_rule_implementation(context):
     output_files = _declare_outputs(context, proto_files)
 
     output_directory = context.genfiles_dir.path
+    if len(context.label.workspace_root) != 0:
+        output_directory += '/' + context.label.workspace_root
 
     plugin_path = context.executable._plugin.path
     plugin_name = plugin_path.split("/")[-1]
     plugin_short_name = plugin_name.replace("protoc-gen-", "")
 
     args = [
-        "--plugin=%s=%s%s" % (plugin_name,
-                              context.label.workspace_root, plugin_path),
+        "--plugin=%s=%s" % (plugin_name, plugin_path),
         "--%s_out" % plugin_short_name, output_directory,
     ]
 
     _virtual_imports = '/_virtual_imports/'
     for proto_file in proto_files:
-    
         if len(proto_file.owner.workspace_root) == 0:
             # Handle case where `proto_file` is a local file.
             args += [
                 "-I" + ".",
                 proto_file.short_path,
+            ]
+        elif proto_file.path.startswith('external'):
+            # Handle case where `proto_file` is from an external
+            # repository (i.e., from 'git_repository()' or
+            # 'http_archive()' or 'local_repository()').
+            elements = proto_file.path.split('/')
+            import_path = '/'.join(elements[:2]) + '/'
+            args += [
+                "-I" + import_path,
+                proto_file.path.replace(import_path, ""),
             ]
         elif _virtual_imports in proto_file.path:
             # Handle case where `proto_file` is a generated file file in
