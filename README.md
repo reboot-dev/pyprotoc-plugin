@@ -91,17 +91,17 @@ If the plugin uses templates, these must be registered as data dependencies.
 load("@rules_python//python:defs.bzl", "py_binary")
 
 py_binary(
-    name='protoc-gen-jonathan',
-    srcs=["protoc-gen-jonathan.py"],
-    srcs_version='PY3',
-    deps=[
+    name = "protoc-gen-jonathan",
+    srcs = ["protoc-gen-jonathan.py"],
+    data = [
+        "//templates:jonathan.cc.j2",
+        "//templates:jonathan.h.j2",
+    ],
+    srcs_version = "PY3",
+    visibility = ["//visibility:public"],
+    deps = [
         "@com_github_reboot_dev_pyprotoc_plugin//:pyprotoc_plugin",
     ],
-    data=[
-        "//templates:jonathan.h.j2",
-        "//templates:jonathan.cc.j2",
-    ],
-    visibility=["//visibility:public"],
 )
 ```
 
@@ -138,6 +138,7 @@ load("@your_repo_name//:rules.bzl", "cc_jonathan_library")
 proto_library(
     name = "potato_proto",
     srcs = [":potato_proto.proto"],
+    visibility = ["//visibility:public"],
     deps = [
         # Well known protos should be included as deps in the
         # proto_library rules of the source files importing them.
@@ -146,13 +147,13 @@ proto_library(
         # `bazel query 'kind(proto_library, @com_google_protobuf//:all)'`
         "@com_google_protobuf//:any_proto",
     ],
-    visibility = ["//visibility:public"],
 )
 
 # Generate files using `protoc` plugin
 cc_jonathan_library(
-    name="potato_jonathan_generated",
-    deps=[
+    name = "potato_jonathan_generated",
+    visibility = ["//visibility:public"],
+    deps = [
         ":potato_proto",
         # Well known protos should be included as deps in the
         # proto_library rules of the source files importing them.
@@ -161,18 +162,16 @@ cc_jonathan_library(
         # `bazel query 'kind(proto_library, @com_google_protobuf//:all)'`
         "@com_google_protobuf//:any_proto",
     ],
-    visibility = ["//visibility:public"],
 )
 
 # Use the generated files to build a cc_library
 cc_library(
-    name="object_store_eventuals",
-    srcs=[":object_store_eventuals_generated"],
-    deps=[
-        ":object_store_grpc",
-        "@com_github_3rdparty_eventuals_grpc//:grpc",
-    ],
+    name = "potato_jonathan_library",
+    srcs = [":potato_jonathan_generated"],
     visibility = ["//visibility:public"],
+    deps = [
+        ...
+    ],
 )
 
 ```
