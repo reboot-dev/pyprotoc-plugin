@@ -1,3 +1,5 @@
+"""Defines rules to create pyprotoc-based bazel rules."""
+
 load("@rules_proto//proto:defs.bzl", "ProtoInfo")
 
 def _get_proto_sources(context):
@@ -111,12 +113,9 @@ def _protoc_plugin_rule_implementation(context):
         use_default_shell_env = True,
     )
 
-    # TODO(alexmc): This returns a legacy provider, which is deprecated:
-    # https://docs.bazel.build/versions/main/skylark/rules.html#migrating-from-legacy-providers
-    # Switch to using modern providers.
-    return struct(
+    return [DefaultInfo(
         files = depset(output_files),
-    )
+    )]
 
 def create_protoc_plugin_rule(plugin_label, extensions):
     return rule(

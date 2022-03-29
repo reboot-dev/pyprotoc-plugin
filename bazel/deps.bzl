@@ -6,4 +6,5 @@ def deps(repo_mapping = {}):
     pip_install(
         name = "pyprotoc_plugin_deps",
         requirements = "@com_github_reboot_dev_pyprotoc_plugin//:requirements.txt",
+        repo_mapping = repo_mapping,
     )
