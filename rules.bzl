@@ -57,7 +57,9 @@ def _protoc_plugin_rule_implementation(context):
 
     plugin_path = context.executable._plugin.path
     plugin_name = plugin_path.split("/")[-1]
-    plugin_short_name = plugin_name.replace("protoc-gen-", "")
+    if not plugin_name.startswith("protoc-gen-"):
+        fail("Plugin name %s does not start with protoc-gen-" % plugin_name)
+    plugin_short_name = plugin_name.removeprefix("protoc-gen-")
 
     args = [
         "--plugin=%s=%s" % (plugin_name, plugin_path),
