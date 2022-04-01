@@ -1,9 +1,7 @@
 syntax = "proto3";
 
-message SampleRequest {}
-
-message SampleResponse {}
+import "tests/sample_messages.proto";
 
 service SampleService {
-  rpc SampleMethod(SampleRequest) returns (SampleResponse) {}
+  rpc SampleMethod(SampleInput) returns (SampleOutput) {}
 }
