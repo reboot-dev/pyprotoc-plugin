@@ -20,6 +20,16 @@ def repos(external = True, repo_mapping = {}):
         repo_mapping = repo_mapping,
     )
 
+    if "com_google_protobuf" not in native.existing_rules():
+        git_repository(
+            name = "com_google_protobuf",
+            remote = "https://github.com/protocolbuffers/protobuf",
+            # Release 3.20.0.
+            commit = "bc799d78f81115940eec953e2937245c70e3e6e4",
+            shallow_since = "1648147893 -0700",
+            repo_mapping = repo_mapping,
+        )
+
     if external and "com_github_reboot_dev_pyprotoc_plugin" not in native.existing_rules():
         git_repository(
             name = "com_github_reboot_dev_pyprotoc_plugin",

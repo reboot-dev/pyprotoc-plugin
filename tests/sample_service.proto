@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+message SampleRequest {}
+
+message SampleResponse {}
+
+service SampleService {
+  rpc SampleMethod(SampleRequest) returns (SampleResponse) {}
+}
