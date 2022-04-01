@@ -1,0 +1,11 @@
+load("@rules_python//python:defs.bzl", "py_test")
+
+py_test(
+    name = "library_tests",
+    srcs = [
+        "library_tests.py",
+    ],
+    deps = [
+        "//pyprotoc_plugin",
+    ],
+)
