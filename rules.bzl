@@ -14,28 +14,19 @@ def _get_proto_sources(context):
     return proto_files
 
 def _generate_output_names(context, proto_file):
-    file_path = proto_file.basename
-    if proto_file.basename.endswith(".proto"):
-        file_path = file_path[:-len(".proto")]
+    file_path = proto_file.basename.removesuffix(".proto")
 
     output_file_names = [
-        "%s%s" % (
-            file_path,
-            extension,
-        )
+        file_path + extension
         for extension in context.attr._extensions
     ]
 
     return output_file_names
 
-def _declare_outputs(context, proto_files):
+def _declare_outputs(context):
     output_files = []
 
-    for proto_file in proto_files:
-        if (len(proto_file.owner.workspace_root) != 0 and
-            not proto_file.path.startswith("external")):
-            continue
-
+    for proto_file in context.files.srcs:
         for output_file in _generate_output_names(context, proto_file):
             output_files.append(
                 context.actions.declare_file(
@@ -48,7 +39,7 @@ def _declare_outputs(context, proto_files):
 
 def _protoc_plugin_rule_implementation(context):
     proto_files = _get_proto_sources(context)
-    output_files = _declare_outputs(context, proto_files)
+    output_files = _declare_outputs(context)
 
     output_directory = context.genfiles_dir.path
     if len(context.label.workspace_root) != 0:
@@ -121,6 +112,10 @@ def _protoc_plugin_rule_implementation(context):
 def create_protoc_plugin_rule(plugin_label, extensions):
     return rule(
         attrs = {
+            "srcs": attr.label_list(
+                allow_files = True,
+                mandatory = True,
+            ),
             "deps": attr.label_list(
                 mandatory = True,
                 providers = [ProtoInfo],

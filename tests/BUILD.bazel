@@ -23,18 +23,34 @@ py_binary(
 )
 
 proto_library(
+    name = "sample_messages_proto",
+    srcs = ["sample_messages.proto"],
+)
+
+py_proto_library(
+    name = "sample_messages_py_proto",
+    srcs = ["sample_messages.proto"],
+)
+
+proto_library(
     name = "sample_service_proto",
     srcs = ["sample_service.proto"],
+    deps = [":sample_messages_proto"],
 )
 
 py_proto_library(
     name = "sample_service_py_proto",
     srcs = ["sample_service.proto"],
+    deps = [":sample_messages_py_proto"],
 )
 
 py_sample_library(
     name = "sample_generated_library",
-    deps = [":sample_service_proto"],
+    srcs = ["sample_service.proto"],
+    deps = [
+        ":sample_messages_proto",
+        ":sample_service_proto",
+    ],
 )
 
 # TODO(CodingCanuck, while-false): Why is this second library needed?

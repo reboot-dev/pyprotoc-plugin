@@ -1,10 +1,10 @@
-from {{ proto_package }} import {{ proto_module }}
+{{ message_imports }}
 
 {% for service in services %}
 class {{ service.name }}CustomClient:
 {% for method in service.methods %}
 
-    def Call{{ method.name }}(self, input: {{ proto_module }}{{ method.input_type }}) -> {{ proto_module }}{{ method.output_type }}:
+    def Call{{ method.name }}(self, input: {{ method.input_type }}) -> {{ method.output_type }}:
         pass
 {%- endfor %}
 {%- endfor %}

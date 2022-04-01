@@ -153,6 +153,7 @@ proto_library(
 cc_jonathan_library(
     name = "potato_jonathan_generated",
     visibility = ["//visibility:public"],
+    srcs = ["potato.proto"],
     deps = [
         ":potato_proto",
         # Well known protos should be included as deps in the
