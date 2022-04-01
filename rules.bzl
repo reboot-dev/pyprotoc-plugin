@@ -19,9 +19,8 @@ def _generate_output_names(context, proto_file):
         file_path = file_path[:-len(".proto")]
 
     output_file_names = [
-        "%s%s%s" % (
+        "%s%s" % (
             file_path,
-            "" if extension.startswith(".") else ".",
             extension,
         )
         for extension in context.attr._extensions
