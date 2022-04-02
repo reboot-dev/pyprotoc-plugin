@@ -24,9 +24,11 @@ def repos(external = True, repo_mapping = {}):
         git_repository(
             name = "com_google_protobuf",
             remote = "https://github.com/protocolbuffers/protobuf",
-            # Release 3.20.0.
-            commit = "bc799d78f81115940eec953e2937245c70e3e6e4",
-            shallow_since = "1648147893 -0700",
+            # Release v3.19.4.
+            # TODO(codingcanuck): Update to a newer release after
+            # https://github.com/protocolbuffers/protobuf/issues/9688 is fixed.
+            commit = "22d0e265de7d2b3d2e9a00d071313502e7d4cccf",
+            shallow_since = "1643340956 -0800",
             repo_mapping = repo_mapping,
         )
 
