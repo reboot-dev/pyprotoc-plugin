@@ -13,6 +13,14 @@ load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
 def repos(external = True, repo_mapping = {}):
+    """Adds repositories/archives needed by pyprotoc-plugin
+
+    Args:
+          external: whether or not we're invoking this function as though
+            though we're an external dependency
+          repo_mapping: passed through to all other functions that expect/use
+            repo_mapping, e.g., 'git_repository'
+    """
     http_archive(
         name = "rules_python",
         url = "https://github.com/bazelbuild/rules_python/releases/download/0.5.0/rules_python-0.5.0.tar.gz",

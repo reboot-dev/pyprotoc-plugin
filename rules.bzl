@@ -112,13 +112,13 @@ def _protoc_plugin_rule_implementation(context):
 def create_protoc_plugin_rule(plugin_label, extensions):
     return rule(
         attrs = {
-            "srcs": attr.label_list(
-                allow_files = True,
-                mandatory = True,
-            ),
             "deps": attr.label_list(
                 mandatory = True,
                 providers = [ProtoInfo],
+            ),
+            "srcs": attr.label_list(
+                allow_files = True,
+                mandatory = True,
             ),
             "_extensions": attr.string_list(
                 default = extensions,
