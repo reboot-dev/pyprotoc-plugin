@@ -100,7 +100,7 @@ py_binary(
     srcs_version = "PY3",
     visibility = ["//visibility:public"],
     deps = [
-        "@com_github_reboot_dev_pyprotoc_plugin//:pyprotoc_plugin",
+        "@com_github_reboot_dev_pyprotoc_plugin//pyprotoc_plugin",
     ],
 )
 ```
