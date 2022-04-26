@@ -1,0 +1,20 @@
+name: Run pre-merge checks
+on:
+  push:
+    branches:
+      - "main"
+  pull_request:
+    branches:
+      - "**"
+
+run-tests:
+  name: Run pre-merge checks
+  runs-on: ubuntu-latest
+  steps:
+    - name: Checkout reboot-dev/respect
+      uses: actions/checkout@v2
+      with:
+        token: ${{ secrets.PRIVATE_REPO_ACCESS_AS_REBOT_TOKEN }}
+        submodules: recursive
+    - name: Run tests
+      run: bazel test //...
