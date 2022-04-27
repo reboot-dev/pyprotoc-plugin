@@ -15,4 +15,4 @@ jobs:
       - name: Checkout reboot-dev/pyprotoc-plugin
         uses: actions/checkout@v2
       - name: Run tests
-        run: bazel test //... --host_force_python=PY2
+        run: bazel test //...
