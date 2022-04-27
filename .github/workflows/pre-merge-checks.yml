@@ -14,5 +14,7 @@ jobs:
     steps:
       - name: Checkout reboot-dev/pyprotoc-plugin
         uses: actions/checkout@v2
+      - name: Report Bazel version
+        run: bazel --version
       - name: Run tests
         run: bazel test //...
