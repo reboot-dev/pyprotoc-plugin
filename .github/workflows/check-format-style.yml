@@ -17,5 +17,5 @@ jobs:
       - name: Check style
         working-directory: .github/workflows/scripts
         shell: bash
-        run: check-format-style.sh
+        run: ./check-format-style.sh
 
