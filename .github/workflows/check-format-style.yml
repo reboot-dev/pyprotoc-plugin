@@ -1,7 +1,5 @@
-# The workflow uses YAPF to check Python format style
-# See docs: https://github.com/google/yapf
-
 name: Check Python format style
+
 on:
   push:
     branches:
@@ -11,15 +9,7 @@ on:
       - "**"
 
 jobs:
-  run-tests:
-    name: Check Python format style
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout pyprotoc-plugin
-        uses: actions/checkout@v2
-      - name: Install YAPF
-        run: pip install yapf
-      - name: Check style
-        shell: bash
-        run: ./.github/workflows/scripts/check-format-style.sh
-
+  submodule-sync:
+    uses: 3rdparty/dev-tools/.github/workflows/check-format-style.yml@main
+    with:
+      devtools_directory: submodules/dev-tools
