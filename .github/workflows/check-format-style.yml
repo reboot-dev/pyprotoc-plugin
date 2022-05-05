@@ -9,7 +9,7 @@ on:
       - "**"
 
 jobs:
-  submodule-sync:
+  check-format-style:
     uses: 3rdparty/dev-tools/.github/workflows/check-format-style.yml@main
     with:
       devtools_directory: submodules/dev-tools
