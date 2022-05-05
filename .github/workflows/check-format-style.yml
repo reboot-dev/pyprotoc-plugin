@@ -7,14 +7,15 @@ on:
     branches:
       - "**"
 
-run-tests:
-  name: Check Python format style
-  runs-on: ubuntu-latest
-  steps:
-    - name: Checkout pyprotoc-plugin
-      uses: actions/checkout@v2
-    - name: Check style
-      working-directory: .github/workflows/scripts
-      shell: bash
-      run: check-format-style.sh
+jobs:
+  run-tests:
+    name: Check Python format style
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout pyprotoc-plugin
+        uses: actions/checkout@v2
+      - name: Check style
+        working-directory: .github/workflows/scripts
+        shell: bash
+        run: check-format-style.sh
 
