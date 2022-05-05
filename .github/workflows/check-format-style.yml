@@ -20,7 +20,6 @@ jobs:
       - name: Install YAPF
         run: pip install yapf
       - name: Check style
-        working-directory: .github/workflows/scripts
         shell: bash
-        run: ./check-format-style.sh
+        run: .github/workflows/scripts/check-format-style.sh
 
