@@ -1,3 +1,6 @@
+# The workflow uses YAPF to check Python format style
+# See docs: https://github.com/google/yapf
+
 name: Check Python format style
 on:
   push:
@@ -14,6 +17,8 @@ jobs:
     steps:
       - name: Checkout pyprotoc-plugin
         uses: actions/checkout@v2
+      - name: Install YAPF
+        run: pip install yapf
       - name: Check style
         working-directory: .github/workflows/scripts
         shell: bash
