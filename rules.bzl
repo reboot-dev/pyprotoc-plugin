@@ -137,13 +137,13 @@ def create_protoc_plugin_rule(plugin_label, extensions = []):
                 default = extensions,
             ),
             "_plugin": attr.label(
-                cfg = "host",
+                cfg = "exec",
                 default = Label(plugin_label),
                 # allow_single_file=True,
                 executable = True,
             ),
             "_protoc": attr.label(
-                cfg = "host",
+                cfg = "exec",
                 default = Label("@com_google_protobuf//:protoc"),
                 executable = True,
                 allow_single_file = True,
