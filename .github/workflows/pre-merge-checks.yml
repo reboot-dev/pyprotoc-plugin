@@ -7,14 +7,47 @@ on:
     branches:
       - "**"
 
-run-tests:
-  name: Run pre-merge checks
-  runs-on: ubuntu-latest
-  steps:
-    - name: Checkout reboot-dev/respect
-      uses: actions/checkout@v2
-      with:
-        token: ${{ secrets.PRIVATE_REPO_ACCESS_AS_REBOT_TOKEN }}
-        submodules: recursive
-    - name: Run tests
-      run: bazel test //...
+jobs:
+  run-tests:
+    name: Run pre-merge checks
+    runs-on: ubuntu-latest
+    env:
+      GOOGLE_APPLICATION_CREDENTIALS: service_account_credentials.json
+    steps:
+      - name: Checkout reboot-dev/pyprotoc-plugin
+        uses: actions/checkout@v2
+      - name: Install Python 3.9 and set it as the default
+        # To set Python 3.9 as the default we use `update-alternatives`:
+        #   https://linux.die.net/man/8/update-alternatives
+        # We must set `python3` in addition to `python` because Bazel knows and cares
+        # about whether it's using python2 or python3, and will enforce its desire by
+        # explicitly running the `python2` or `python3` command.
+        run: |
+          sudo apt update
+          sudo apt install python3.9
+          sudo update-alternatives --install /usr/bin/python python /usr/bin/python3.9 1
+          sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.9 1
+          python --version
+          python3 --version
+      - name: Set up read+write remote cache credentials (when on main)
+        # With the exception of GITHUB_TOKEN, secrets are not passed to the runner
+        # when a workflow is triggered from a forked repository. We can therefore
+        # only safely assume `GCP_REMOTE_CACHE_CREDENTIALS` to exist once the PR
+        # has been merged to `main`.
+        if: github.ref == 'refs/heads/main'
+        uses: jsdaniell/create-json@1.1.2
+        with:
+          name: ${{ env.GOOGLE_APPLICATION_CREDENTIALS }}
+          json: ${{ secrets.GCP_REMOTE_CACHE_CREDENTIALS }}
+      - name: Set up read+write remote cache (when on main)
+        # Ditto to the reasoning of the step above, we will only use the cache in
+        # read-write mode if we're on `main`.
+        if: github.ref == 'refs/heads/main'
+        run: |
+          echo "BAZEL_REMOTE_CACHE=--remote_upload_local_results=true \
+            --google_credentials=${{ env.GOOGLE_APPLICATION_CREDENTIALS }}" \
+            >> $GITHUB_ENV
+      - name: Run tests
+        run: |
+          bazel test //... \
+            ${{ env.BAZEL_REMOTE_CACHE }}
