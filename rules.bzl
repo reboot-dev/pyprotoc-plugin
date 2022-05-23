@@ -27,12 +27,18 @@ def _declare_outputs(context):
     output_files = []
 
     for proto_file in context.files.srcs:
-        for output_file in _generate_output_names(context, proto_file):
+        # Applicable for non cpp builds.
+        if context.attr._extensions:
+            for output_file in _generate_output_names(context, proto_file):
+                output_files.append(
+                    context.actions.declare_file(
+                       output_file,
+                       sibling = proto_file,
+                    ),
+                )
+        else:
             output_files.append(
-                context.actions.declare_file(
-                    output_file,
-                    sibling = proto_file,
-                ),
+                context.actions.declare_directory(proto_file.basename.removesuffix('.proto') + '_generated')
             )
 
     return output_files
@@ -42,11 +48,18 @@ def _protoc_plugin_rule_implementation(context):
     output_files = _declare_outputs(context)
 
     output_directory = context.genfiles_dir.path
+
+    if not context.attr._extensions:
+        # Declare a directory on one level upper to generated ones, to be sure
+        # it works with a couple proto files.
+        output_directory = "/".join(output_files[0].path.split('/')[:-1])
+    
     if len(context.label.workspace_root) != 0:
         output_directory += "/" + context.label.workspace_root
 
     plugin_path = context.executable._plugin.path
     plugin_name = plugin_path.split("/")[-1]
+
     if not plugin_name.startswith("protoc-gen-"):
         fail("Plugin name %s does not start with protoc-gen-" % plugin_name)
     plugin_short_name = plugin_name.removeprefix("protoc-gen-")
@@ -54,7 +67,7 @@ def _protoc_plugin_rule_implementation(context):
     args = [
         "--plugin=%s=%s" % (plugin_name, plugin_path),
         "--%s_out" % plugin_short_name,
-        output_directory,
+        output_directory
     ]
 
     _virtual_imports = "/_virtual_imports/"
@@ -109,7 +122,7 @@ def _protoc_plugin_rule_implementation(context):
         files = depset(output_files),
     )]
 
-def create_protoc_plugin_rule(plugin_label, extensions):
+def create_protoc_plugin_rule(plugin_label, extensions = []):
     return rule(
         attrs = {
             "deps": attr.label_list(

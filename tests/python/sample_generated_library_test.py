@@ -1,5 +1,5 @@
-from tests.sample_service_sample_generated_out import SampleServiceCustomClient
-from tests import sample_messages_pb2
+from tests.python.sample_service_sample_generated_out import SampleServiceCustomClient
+from tests.python import sample_messages_pb2
 
 import unittest
 
