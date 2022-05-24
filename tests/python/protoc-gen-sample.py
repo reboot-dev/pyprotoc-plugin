@@ -21,7 +21,7 @@ class SampleProtocPlugin(ProtocPlugin):
             'proto_name':
                 proto_file.name,
             'proto_package':
-                os.path.dirname(proto_file.name),
+                os.path.dirname(proto_file.name).replace('/', '.'),
             'proto_module':
                 os.path.basename(proto_file.name).replace('.proto', '_pb2'),
             'services':
