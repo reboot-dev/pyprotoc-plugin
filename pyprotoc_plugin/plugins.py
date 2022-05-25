@@ -21,9 +21,7 @@ class ProtocPlugin(object):
         self.response = plugin.CodeGeneratorResponse()
 
     def finalize(self) -> None:
-        sys.stdout.buffer.write(
-            self.response.SerializeToString()
-        )
+        sys.stdout.buffer.write(self.response.SerializeToString())
 
     def run(self) -> None:
         for proto_file in self.request.proto_file:

@@ -1,7 +1,7 @@
 load("@rules_cc//cc:defs.bzl", "cc_binary", "cc_library", "cc_proto_library")
 load("@rules_proto//proto:defs.bzl", "proto_library")
-load(":cpp_rule.bzl", "cc_generate_library")
 load("@rules_python//python:defs.bzl", "py_binary")
+load(":cpp_rule.bzl", "cc_generate_library")
 
 py_binary(
     name = "protoc-gen-headers",
@@ -26,11 +26,13 @@ proto_library(
 cc_generate_library(
     name = "cc_generated_proto",
     srcs = [
+        "another_service.proto",
         "sample_service.proto",
-        "another_service.proto"],
+    ],
     deps = [
+        ":another_service_proto",
         ":sample_service_proto",
-        ":another_service_proto"],
+    ],
 )
 
 cc_proto_library(
@@ -47,9 +49,9 @@ cc_library(
     name = "cc_library_generated",
     hdrs = [":cc_generated_proto"],
     deps = [
+        ":another_service_cc_proto",
         ":sample_service_cc_proto",
-        ":another_service_cc_proto"
-    ]
+    ],
 )
 
 cc_binary(
@@ -57,5 +59,5 @@ cc_binary(
     srcs = ["cc_generated_test.cc"],
     deps = [
         ":cc_library_generated",
-    ]
+    ],
 )

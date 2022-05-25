@@ -16,6 +16,10 @@ jobs:
     steps:
       - name: Checkout reboot-dev/pyprotoc-plugin
         uses: actions/checkout@v2
+        with:
+          # We don't need special credentials since this is a public repo
+          # that only depends on other public repos.
+          submodules: recursive
       - name: Install Python 3.9 and set it as the default
         # To set Python 3.9 as the default we use `update-alternatives`:
         #   https://linux.die.net/man/8/update-alternatives

@@ -3,7 +3,6 @@ import os
 
 from jinja2 import Template, StrictUndefined
 
-
 ENV_TEMPLATE_PATH = 'TEMPLATE_PATH'
 
 
@@ -12,32 +11,27 @@ def resolve_template_path(template_name: str) -> str:
 
     template_path = os.environ.get(ENV_TEMPLATE_PATH, None)
     if template_path is None:
-        template_path = ':'.join([
-            '.',
-            os.path.join(__file__, '..'),
-            os.path.join(__file__, '../templates/')
-        ])
+        template_path = ':'.join(
+            [
+                '.',
+                os.path.join(__file__, '..'),
+                os.path.join(__file__, '../templates/')
+            ]
+        )
 
     valid_paths = [
-        os.path.abspath(path)
-        for path in
-        [
+        os.path.abspath(path) for path in [
             os.path.join(path_segment, template_name)
-            for path_segment in
-            template_path.split(':')
-        ]
-        if os.path.exists(path)
+            for path_segment in template_path.split(':')
+        ] if os.path.exists(path)
     ]
 
     if len(valid_paths) == 0:
         print(
             [
-                os.path.abspath(path)
-                for path in
-                [
+                os.path.abspath(path) for path in [
                     os.path.join(path_segment, template_name)
-                    for path_segment in
-                    template_path.split(':')
+                    for path_segment in template_path.split(':')
                 ]
             ],
             file=sys.stderr
@@ -53,10 +47,7 @@ def add_template_path(path: str) -> None:
     template_path = os.environ.get(ENV_TEMPLATE_PATH, '')
 
     new_template_path = ':'.join(
-        p
-        for p in
-        [os.path.abspath(path), template_path]
-        if len(p)
+        p for p in [os.path.abspath(path), template_path] if len(p)
     )
 
     print(
