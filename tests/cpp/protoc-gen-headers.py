@@ -66,6 +66,18 @@ class SampleCppProtocPlugin(ProtocPlugin):
 
             self.response.file.add(name=output_file_path, content=content)
 
+            # For eventuals we would always have files in the root.
+            proto_file_name = template_data['proto_name'].split('/')[-1]
+            self.response.file.add(
+                name=proto_file_name.replace('.proto', '.eventuals.h'),
+                content=''
+            )
+
+            self.response.file.add(
+                name=proto_file_name.replace('.proto', '.eventuals.cc'),
+                content=''
+            )
+
         super().finalize()
 
 

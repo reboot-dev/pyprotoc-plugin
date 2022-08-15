@@ -1,7 +1,9 @@
 #include <iostream>
 
+#include "tests/cpp/another_service.eventuals.h"
 #include "tests/cpp/another_service.pb.h"
 #include "tests/cpp/another_service_generated/another_service_generated.h"
+#include "tests/cpp/sample_service.eventuals.h"
 #include "tests/cpp/sample_service.pb.h"
 #include "tests/cpp/sample_service_generated/sample_service_generated.h"
 

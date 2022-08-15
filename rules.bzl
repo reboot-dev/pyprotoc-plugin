@@ -38,6 +38,12 @@ def _declare_outputs(context):
                 )
         else:
             output_files.append(
+                context.actions.declare_file(proto_file.basename.removesuffix(".proto") + ".eventuals.h"),
+            )
+            output_files.append(
+                context.actions.declare_file(proto_file.basename.removesuffix(".proto") + ".eventuals.cc"),
+            )
+            output_files.append(
                 context.actions.declare_directory(proto_file.basename.removesuffix(".proto") + "_generated"),
             )
 
