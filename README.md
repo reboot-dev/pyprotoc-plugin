@@ -4,6 +4,7 @@ The package provides a small `python3` library as well as some `bazel` templates
 make it easier for developers using `bazel` to write `protoc` plugins and generate custom code from protobuf files.
 
 ## Requirements
+
 `pyprotoc_plugin` works with Python `>=3.9`.
 
 ## Creating a plugin
