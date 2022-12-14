@@ -1,7 +1,6 @@
-import sys
 import os
-
-from jinja2 import Template, StrictUndefined
+import sys
+from jinja2 import StrictUndefined, Template
 
 ENV_TEMPLATE_PATH = 'TEMPLATE_PATH'
 
@@ -58,7 +57,7 @@ def add_template_path(path: str) -> None:
     os.environ[ENV_TEMPLATE_PATH] = new_template_path
 
 
-def load_template(template_name: str) -> Template:
+def load_template(template_name: str, **template_options) -> Template:
     template_path = resolve_template_path(template_name) \
         if not os.path.exists(template_name) else template_name
 
@@ -66,4 +65,5 @@ def load_template(template_name: str) -> Template:
         return Template(
             template_file.read(),
             undefined=StrictUndefined,
+            **template_options,
         )
