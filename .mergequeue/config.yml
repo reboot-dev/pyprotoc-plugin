@@ -2,9 +2,9 @@ version: 1.0.0
 merge_rules:
   labels:
     trigger: mergequeue-ready
-    skip_line: ''
-    merge_failed: ''
-    skip_delete_branch: ''
+    skip_line: ""
+    merge_failed: ""
+    skip_delete_branch: ""
   update_latest: true
   delete_branch: false
   use_rebase: true
@@ -20,13 +20,13 @@ merge_rules:
     parallel_mode: null
   auto_update:
     enabled: false
-    label: ''
+    label: ""
     max_runs_for_update: 0
   merge_commit:
     use_title_and_body: false
   merge_strategy:
     name: squash
     override_labels:
-      squash: ''
-      merge: ''
+      squash: ""
+      merge: ""
       rebase: mergequeue-rebase
