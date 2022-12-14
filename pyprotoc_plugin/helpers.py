@@ -1,7 +1,6 @@
-import sys
 import os
-
-from jinja2 import Template, StrictUndefined
+import sys
+from jinja2 import StrictUndefined, Template
 
 ENV_TEMPLATE_PATH = 'TEMPLATE_PATH'
 
@@ -66,4 +65,5 @@ def load_template(template_name: str) -> Template:
         return Template(
             template_file.read(),
             undefined=StrictUndefined,
+            trim_blocks=True,
         )
