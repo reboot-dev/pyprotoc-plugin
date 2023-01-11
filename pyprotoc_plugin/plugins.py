@@ -2,6 +2,7 @@ import sys
 
 from google.protobuf.compiler import plugin_pb2 as plugin
 from google.protobuf.descriptor_pb2 import FileDescriptorProto
+from google.protobuf.descriptor_pool import DescriptorPool
 
 
 class ProtocPlugin(object):
@@ -19,6 +20,10 @@ class ProtocPlugin(object):
         )
 
         self.response = plugin.CodeGeneratorResponse()
+
+        self.pool = DescriptorPool()
+        for proto_file in self.request.proto_file:
+            self.pool.Add(proto_file)
 
     def finalize(self) -> None:
         sys.stdout.buffer.write(self.response.SerializeToString())
