@@ -2,10 +2,8 @@
 """A sample plugin to demonstrate the use of pyprotoc-plugin."""
 import os
 import sys
-
 from google.protobuf.descriptor_pb2 import FileDescriptorProto
-
-from pyprotoc_plugin.helpers import load_template, add_template_path
+from pyprotoc_plugin.helpers import add_template_path, load_template
 from pyprotoc_plugin.plugins import ProtocPlugin
 
 
