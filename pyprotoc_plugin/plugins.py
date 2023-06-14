@@ -1,5 +1,4 @@
 import sys
-
 from google.protobuf.compiler import plugin_pb2 as plugin
 from google.protobuf.descriptor_pb2 import FileDescriptorProto
 from google.protobuf.descriptor_pool import DescriptorPool
@@ -19,7 +18,13 @@ class ProtocPlugin(object):
             sys.stdin.buffer.read()
         )
 
-        self.response = plugin.CodeGeneratorResponse()
+        self.response = plugin.CodeGeneratorResponse(
+            # Since `pyprotoc_plugin` was introduced after proto3 added the
+            # `optional` keyword, we assume that all plugins built using this
+            # library are compatible with `optional` fields.
+            supported_features=plugin.CodeGeneratorResponse.
+            FEATURE_PROTO3_OPTIONAL
+        )
 
         self.pool = DescriptorPool()
         for proto_file in self.request.proto_file:
