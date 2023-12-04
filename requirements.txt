@@ -1,2 +1,0 @@
-Jinja2>=3
-protobuf>=3
