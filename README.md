@@ -7,6 +7,9 @@ make it easier for developers using `bazel` to write `protoc` plugins and genera
 
 `pyprotoc_plugin` works with Python `>=3.9`.
 
+The `requirements_lock.txt` is used at `pip_parse`, to correctly update it (pick all transitive dependencies), run
+`bazel run :requirements.update`.
+
 ## Creating a plugin
 
 A `protoc` plugin is any executable, named `protoc-gen-.*`, that can read and write `protoc` compatible input and output from `stdin` and `stdout`.
