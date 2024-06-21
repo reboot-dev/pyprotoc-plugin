@@ -3,13 +3,14 @@
 load("@rules_proto//proto:defs.bzl", "ProtoInfo")
 
 def _get_proto_sources(context):
-    proto_files = []
+    proto_files = [
+        src
+        for src in context.files.srcs
+    ]
 
     for dependency in context.attr.deps:
-        proto_files += [
-            p
-            for p in dependency[ProtoInfo].direct_sources
-        ]
+        proto_provider = dependency[ProtoInfo]
+        proto_files += proto_provider.transitive_sources.to_list()
 
     return proto_files
 
