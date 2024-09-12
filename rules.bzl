@@ -145,7 +145,7 @@ def create_protoc_plugin_rule(plugin_label, extensions = []):
             ),
             "_protoc": attr.label(
                 cfg = "exec",
-                default = Label("@com_google_protobuf//:protoc"),
+                default = Label("@protobuf//:protoc"),
                 executable = True,
                 allow_single_file = True,
             ),

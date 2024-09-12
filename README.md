@@ -149,10 +149,10 @@ proto_library(
     deps = [
         # Well known protos should be included as deps in the
         # proto_library rules of the source files importing them.
-        # A list of all @com_google_protobuf well known protos can
+        # A list of all @protobuf well known protos can
         # seen with:
-        # `bazel query 'kind(proto_library, @com_google_protobuf//:all)'`
-        "@com_google_protobuf//:any_proto",
+        # `bazel query 'kind(proto_library, @protobuf//:all)'`
+        "@protobuf//:any_proto",
     ],
 )
 
@@ -165,10 +165,10 @@ cc_jonathan_library(
         ":potato_proto",
         # Well known protos should be included as deps in the
         # proto_library rules of the source files importing them.
-        # A list of all @com_google_protobuf well known protos can
+        # A list of all @protobuf well known protos can
         # seen with:
-        # `bazel query 'kind(proto_library, @com_google_protobuf//:all)'`
-        "@com_google_protobuf//:any_proto",
+        # `bazel query 'kind(proto_library, @protobuf//:all)'`
+        "@protobuf//:any_proto",
     ],
 )
 

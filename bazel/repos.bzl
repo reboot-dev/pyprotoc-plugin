@@ -29,9 +29,9 @@ def repos(external = True, repo_mapping = {}):
         repo_mapping = repo_mapping,
     )
 
-    if "com_google_protobuf" not in native.existing_rules():
+    if "protobuf" not in native.existing_rules():
         git_repository(
-            name = "com_google_protobuf",
+            name = "protobuf",
             remote = "https://github.com/protocolbuffers/protobuf",
             # Release v3.19.4.
             # TODO(codingcanuck): Update to a newer release after

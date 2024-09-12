@@ -1,4 +1,4 @@
-load("@com_google_protobuf//:protobuf.bzl", "py_proto_library")
+load("@protobuf//:protobuf.bzl", "py_proto_library")
 load("@rules_proto//proto:defs.bzl", "proto_library")
 load("@rules_python//python:defs.bzl", "py_binary", "py_library", "py_test")
 load(":sample_rule.bzl", "py_sample_library")
