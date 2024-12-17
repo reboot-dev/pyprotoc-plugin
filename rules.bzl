@@ -65,7 +65,13 @@ def _protoc_plugin_rule_implementation(context):
         fail("Plugin name %s does not start with protoc-gen-" % plugin_name)
     plugin_short_name = plugin_name.removeprefix("protoc-gen-")
 
-    args = [
+    # Args passed to 'create_protoc_plugin_rule' are not allowed to start with
+    # '--plugin' or '--<plugin_short_name>_out'.
+    for arg in context.attr._args:
+        if arg.startswith("--plugin") or arg.startswith("--%s_out" % plugin_short_name):
+            fail("Argument %s starts with --plugin or --%s_out, which is not allowed" % (arg, plugin_short_name))
+
+    args = context.attr._args + [
         "--plugin=%s=%s" % (plugin_name, plugin_path),
         "--%s_out" % plugin_short_name,
         output_directory,
@@ -116,14 +122,14 @@ def _protoc_plugin_rule_implementation(context):
         ],
         command = context.executable._protoc.path + " $@",
         arguments = args,
-        use_default_shell_env = True,
+        env = context.attr._env,
     )
 
     return [DefaultInfo(
         files = depset(output_files),
     )]
 
-def create_protoc_plugin_rule(plugin_label, extensions = []):
+def create_protoc_plugin_rule(plugin_label, extensions = [], args = [], env = {}):
     return rule(
         attrs = {
             "deps": attr.label_list(
@@ -133,6 +139,14 @@ def create_protoc_plugin_rule(plugin_label, extensions = []):
             "srcs": attr.label_list(
                 allow_files = True,
                 mandatory = True,
+            ),
+            "_args": attr.string_list(
+                mandatory = False,
+                default = args,
+            ),
+            "_env": attr.string_dict(
+                mandatory = False,
+                default = env,
             ),
             "_extensions": attr.string_list(
                 default = extensions,
