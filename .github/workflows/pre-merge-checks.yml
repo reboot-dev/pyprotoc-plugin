@@ -10,7 +10,7 @@ on:
 jobs:
   run-tests:
     name: Run pre-merge checks
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     env:
       GOOGLE_APPLICATION_CREDENTIALS: service_account_credentials.json
     steps:
@@ -20,15 +20,22 @@ jobs:
           # We don't need special credentials since this is a public repo
           # that only depends on other public repos.
           submodules: recursive
-      - name: Install Python 3.9 and set it as the default
-        # To set Python 3.9 as the default we use `update-alternatives`:
+      - name: Install Python 3.10 and set it as the default
+        # To set Python 3.10 as the default we use `update-alternatives`:
         #   https://linux.die.net/man/8/update-alternatives
         # We must set `python3` in addition to `python` because Bazel knows and cares
         # about whether it's using python2 or python3, and will enforce its desire by
         # explicitly running the `python2` or `python3` command.
         run: |
-          sudo apt update
-          sudo apt install python3.10
+          sudo apt-get update \
+            && DEBIAN_FRONTEND=noninteractive sudo apt-get install -y --no-install-recommends \
+            curl gpg gpg-agent software-properties-common
+          sudo add-apt-repository ppa:deadsnakes/ppa \
+            && sudo apt-get update \
+            && DEBIAN_FRONTEND=noninteractive sudo apt-get install -y --no-install-recommends \
+            python3.10 \
+            python3.10-dev \
+            python3.10-venv
           sudo update-alternatives --install /usr/bin/python python /usr/bin/python3.10 1
           sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.10 1
           python --version
