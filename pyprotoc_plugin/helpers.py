@@ -32,8 +32,7 @@ def resolve_template_path(template_name: str) -> str:
                     os.path.join(path_segment, template_name)
                     for path_segment in template_path.split(':')
                 ]
-            ],
-            file=sys.stderr
+            ], file=sys.stderr
         )
         raise RuntimeError(f'Template {template_name} could not be resolved.')
 
