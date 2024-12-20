@@ -107,7 +107,7 @@ def _protoc_plugin_rule_implementation(context):
         else:
             fail(
                 "Handling this type of (generated?) .proto file " +
-                "was not forseen and is not implemented. " +
+                "was not foreseen and is not implemented. " +
                 "Please create an issue at " +
                 "https://github.com/reboot-dev/pyprotoc-plugin/issues " +
                 "with your proto file and we will have a look!",
