@@ -11,6 +11,7 @@
 
 load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+load("@bazel_tools//tools/build_defs/repo:utils.bzl", "maybe")
 
 def repos(external = True, repo_mapping = {}):
     """Adds repositories/archives needed by pyprotoc-plugin
@@ -21,7 +22,8 @@ def repos(external = True, repo_mapping = {}):
           repo_mapping: passed through to all other functions that expect/use
             repo_mapping, e.g., 'git_repository'
     """
-    http_archive(
+    maybe(
+        http_archive,
         name = "rules_python",
         sha256 = "9acc0944c94adb23fba1c9988b48768b1bacc6583b52a2586895c5b7491e2e31",
         strip_prefix = "rules_python-0.27.0",
