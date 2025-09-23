@@ -1,2 +1,2 @@
 Jinja2>=3
-protobuf>=3
+protobuf>= 5.29.5
