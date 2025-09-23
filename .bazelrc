@@ -1,8 +1,16 @@
-# Use a remote build cache that's world-readable. Don't write unless told otherwise.
+# Disable Bazel modules (for now).
+common --enable_bzlmod=false
 
+build --cxxopt='-std=c++17'
+build --host_cxxopt='-std=c++17'
+
+# Use a remote build cache that's world-readable. Don't write unless told otherwise.
 build --remote_cache=https://storage.googleapis.com/reboot-dev-bazel-remote-cache-reboot-us
 build --remote_upload_local_results=false
 
 # Print full test logs for failed tests.
-
 test --test_output=errors
+
+# To debug errors using the remote cache we need the `--verbose_failures` flag to
+# get any useful information whatsoever.
+build --verbose_failures
