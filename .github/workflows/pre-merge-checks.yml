@@ -10,36 +10,13 @@ on:
 jobs:
   run-tests:
     name: Run pre-merge checks
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     env:
       GOOGLE_APPLICATION_CREDENTIALS: service_account_credentials.json
     steps:
-      - name: Checkout reboot-dev/pyprotoc-plugin
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v2
         with:
-          # We don't need special credentials since this is a public repo
-          # that only depends on other public repos.
           submodules: recursive
-      - name: Install Python 3.10 and set it as the default
-        # To set Python 3.10 as the default we use `update-alternatives`:
-        #   https://linux.die.net/man/8/update-alternatives
-        # We must set `python3` in addition to `python` because Bazel knows and cares
-        # about whether it's using python2 or python3, and will enforce its desire by
-        # explicitly running the `python2` or `python3` command.
-        run: |
-          sudo apt-get update \
-            && DEBIAN_FRONTEND=noninteractive sudo apt-get install -y --no-install-recommends \
-            curl gpg gpg-agent software-properties-common
-          sudo add-apt-repository ppa:deadsnakes/ppa \
-            && sudo apt-get update \
-            && DEBIAN_FRONTEND=noninteractive sudo apt-get install -y --no-install-recommends \
-            python3.10 \
-            python3.10-dev \
-            python3.10-venv
-          sudo update-alternatives --install /usr/bin/python python /usr/bin/python3.10 1
-          sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.10 1
-          python --version
-          python3 --version
       - name: Set up read+write remote cache credentials (when on main)
         # With the exception of GITHUB_TOKEN, secrets are not passed to the runner
         # when a workflow is triggered from a forked repository. We can therefore
