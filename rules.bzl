@@ -1,6 +1,6 @@
 """Defines rules to create pyprotoc-based bazel rules."""
 
-load("@com_google_protobuf//bazel/common:proto_info.bzl", "ProtoInfo")
+load("@rules_proto//proto:defs.bzl", "ProtoInfo")
 
 def _get_proto_sources(context):
     proto_files = [
