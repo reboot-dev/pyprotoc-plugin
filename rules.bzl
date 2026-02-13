@@ -101,6 +101,35 @@ def _protoc_plugin_rule_implementation(context):
     proto_files = unique_proto_files
 
     for proto_file in proto_files:
+        # If Bazel gives us a `_virtual_imports` path, that path is already the
+        # canonical import view for `protoc` (import root + import-relative
+        # filename). We must use it as-is and skip all other path handling.
+        #
+        # Important: do not fall through to local/external logic for these
+        # files. That logic computes a different `-I` root from physical paths,
+        # which can disagree with the virtual import view and break imports.
+        # Local/external branches below are only for non-virtual paths.
+        if _virtual_imports in proto_file.path:
+            before, after = proto_file.path.split(_virtual_imports)
+            import_path = before + _virtual_imports + after.split("/")[0] + "/"
+            args += [
+                "-I" + import_path,
+                proto_file.path.replace(import_path, ""),
+            ]
+            continue
+
+        # Handle generated files in external repositories where Bazel surfaces
+        # short paths like "../<repo>/<repo-relative-path>.proto".
+        if proto_file.short_path.startswith("../"):
+            short_path = proto_file.short_path.removeprefix("../")
+            if "/" in short_path:
+                short_path = short_path.split("/", 1)[1]
+                if proto_file.path.endswith(short_path):
+                    import_path = proto_file.path[:-len(short_path)]
+                    args.append("-I" + import_path)
+                    args.append(short_path)
+                    continue
+
         if len(proto_file.owner.workspace_root) == 0:
             # Handle case where `proto_file` is a local file.
             # This includes both source files in the workspace and files
@@ -109,7 +138,6 @@ def _protoc_plugin_rule_implementation(context):
             # determine the import path correctly for that case. For
             # files which are part of the workspace, the `import_path`
             # will be empty and we will set it to `./`.
-            elements = proto_file.path.split("/")
             import_path = proto_file.path[:-len(proto_file.short_path)]
 
             if import_path == "":
@@ -126,15 +154,6 @@ def _protoc_plugin_rule_implementation(context):
             # 'http_archive()' or 'local_repository()').
             elements = proto_file.path.split("/")
             import_path = "/".join(elements[:2]) + "/"
-            args += [
-                "-I" + import_path,
-                proto_file.path.replace(import_path, ""),
-            ]
-        elif _virtual_imports in proto_file.path:
-            # Handle case where `proto_file` is a generated file file in
-            # `_virtual_imports`.
-            before, after = proto_file.path.split(_virtual_imports)
-            import_path = before + _virtual_imports + after.split("/")[0] + "/"
             args += [
                 "-I" + import_path,
                 proto_file.path.replace(import_path, ""),
