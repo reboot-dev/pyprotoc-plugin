@@ -9,26 +9,43 @@
 # instructions at https://github.com/reboot-dev/pyprotoc-plugin.
 ########################################################################
 
+load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
-load("@bazel_tools//tools/build_defs/repo:utils.bzl", "maybe")
 
-def repos():
-    """Adds repositories/archives needed by pyprotoc-plugin."""
+def repos(external = True, repo_mapping = {}):
+    """Adds repositories/archives needed by pyprotoc-plugin
 
-    maybe(
-        http_archive,
+    Args:
+          external: whether or not we're invoking this function as though
+            though we're an external dependency
+          repo_mapping: passed through to all other functions that expect/use
+            repo_mapping, e.g., 'git_repository'
+    """
+    http_archive(
         name = "rules_python",
-        sha256 = "4f7e2aa1eb9aa722d96498f5ef514f426c1f55161c3c9ae628c857a7128ceb07",
-        strip_prefix = "rules_python-1.0.0",
-        url = "https://github.com/bazelbuild/rules_python/releases/download/1.0.0/rules_python-1.0.0.tar.gz",
+        sha256 = "9acc0944c94adb23fba1c9988b48768b1bacc6583b52a2586895c5b7491e2e31",
+        strip_prefix = "rules_python-0.27.0",
+        url = "https://github.com/bazelbuild/rules_python/releases/download/0.27.0/rules_python-0.27.0.tar.gz",
+        repo_mapping = repo_mapping,
     )
 
-    maybe(
-        http_archive,
-        name = "com_google_protobuf",
-        sha256 = "955ef3235be41120db4d367be81efe6891c9544b3a71194d80c3055865b26e09",
-        strip_prefix = "protobuf-29.5",
-        urls = [
-            "https://github.com/protocolbuffers/protobuf/archive/v29.5.tar.gz",
-        ],
-    )
+    if "com_google_protobuf" not in native.existing_rules():
+        git_repository(
+            name = "com_google_protobuf",
+            remote = "https://github.com/protocolbuffers/protobuf",
+            # Release v3.19.4.
+            # TODO(codingcanuck): Update to a newer release after
+            # https://github.com/protocolbuffers/protobuf/issues/9688 is fixed.
+            commit = "22d0e265de7d2b3d2e9a00d071313502e7d4cccf",
+            shallow_since = "1643340956 -0800",
+            repo_mapping = repo_mapping,
+        )
+
+    if external and "com_github_reboot_dev_pyprotoc_plugin" not in native.existing_rules():
+        git_repository(
+            name = "com_github_reboot_dev_pyprotoc_plugin",
+            remote = "https://github.com/reboot-dev/pyprotoc-plugin",
+            commit = "9f7a281670f03b77140c4437ac2a56b86f978af6",
+            shallow_since = "1649038239 +0000",
+            repo_mapping = repo_mapping,
+        )
