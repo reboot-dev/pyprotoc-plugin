@@ -54,7 +54,8 @@ def _protoc_plugin_rule_implementation(context):
         # file path already includes the workspace root for
         # external repos, so no need to append it again.
         output_directory = "/".join(
-            output_files[0].path.split("/")[:-1])
+            output_files[0].path.split("/")[:-1],
+        )
     else:
         output_directory = context.genfiles_dir.path
         if len(context.label.workspace_root) != 0:
