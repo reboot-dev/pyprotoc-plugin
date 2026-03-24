@@ -1,6 +1,6 @@
 """Defines rules to create pyprotoc-based bazel rules."""
 
-load("@rules_proto//proto:defs.bzl", "ProtoInfo")
+load("@com_google_protobuf//bazel/common:proto_info.bzl", "ProtoInfo")
 
 def _get_proto_sources(context):
     proto_files = [
@@ -48,15 +48,17 @@ def _protoc_plugin_rule_implementation(context):
     proto_files = _get_proto_sources(context)
     output_files = _declare_outputs(context)
 
-    output_directory = context.genfiles_dir.path
-
     if not context.attr._extensions:
-        # Declare a directory on one level upper to generated ones, to be sure
-        # it works with a couple proto files.
-        output_directory = "/".join(output_files[0].path.split("/")[:-1])
-
-    if len(context.label.workspace_root) != 0:
-        output_directory += "/" + context.label.workspace_root
+        # Declare a directory one level up from generated ones, to
+        # be sure it works with a couple proto files. The output
+        # file path already includes the workspace root for
+        # external repos, so no need to append it again.
+        output_directory = "/".join(
+            output_files[0].path.split("/")[:-1])
+    else:
+        output_directory = context.genfiles_dir.path
+        if len(context.label.workspace_root) != 0:
+            output_directory += "/" + context.label.workspace_root
 
     plugin_path = context.executable._plugin.path
     plugin_name = plugin_path.split("/")[-1]

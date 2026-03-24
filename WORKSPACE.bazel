@@ -2,7 +2,7 @@ workspace(name = "com_github_reboot_dev_pyprotoc_plugin")
 
 load("//bazel:repos.bzl", "repos")
 
-repos(external = False)
+repos()
 
 load("//bazel:py_toolchains.bzl", "py_toolchains")
 
