@@ -10,4 +10,5 @@ def pypi_repos():
         name = "pyprotoc_plugin_pypi",
         python_interpreter_target = "@python3_10_12_host//:python",
         requirements_lock = "@com_github_reboot_dev_pyprotoc_plugin//:requirements_lock.txt",
+        timeout = 1800,
     )
