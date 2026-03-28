@@ -90,7 +90,7 @@ First you need to set up your project to depend on this repository. We suggest t
 
 ### Registering a plugin
 
-Assuming that we'd like to use the plugin `protoc-gen-jonathan.py` as a `protoc` plugin in `bazel`, the first thing to do is registering it as a `py_binary` with `bazel`, giving the target a name compliant with what `protoc` will accept as a name (i.e. like `/protoc-gen-[^_\.-]*/`).
+Assuming that we would like to use the plugin `protoc-gen-jonathan.py` as a `protoc` plugin in `bazel`, the first thing to do is register it as a `py_binary` with `bazel`, giving the target a name compliant with what `protoc` will accept as a name (i.e., like `/protoc-gen-[^_\.-]*/`).
 
 If the plugin uses templates, these must be registered as data dependencies.
 
