@@ -1,4 +1,5 @@
 common --enable_bzlmod=false
+common --enable_workspace=true
 
 # Use a remote build cache that's world-readable. Don't write unless told otherwise.
 
