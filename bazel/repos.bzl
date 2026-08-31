@@ -46,6 +46,19 @@ def repos(external = True, repo_mapping = {}):
         repo_mapping = repo_mapping,
     )
 
+    # `rules.bzl` and our test `BUILD.bazel` files take `ProtoInfo` and
+    # `proto_library` from `@rules_proto`, which Protobuf used to
+    # declare from `protobuf_deps()`. Protobuf 29 dropped that, so
+    # declare it ourselves.
+    maybe(
+        http_archive,
+        name = "rules_proto",
+        sha256 = "14a225870ab4e91869652cfd69ef2028277fc1dc4910d65d353b62d6e0ae21f4",
+        strip_prefix = "rules_proto-7.1.0",
+        url = "https://github.com/bazelbuild/rules_proto/releases/download/7.1.0/rules_proto-7.1.0.tar.gz",
+        repo_mapping = repo_mapping,
+    )
+
     if "com_google_protobuf" not in native.existing_rules():
         http_archive(
             name = "com_google_protobuf",
