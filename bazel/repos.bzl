@@ -47,14 +47,13 @@ def repos(external = True, repo_mapping = {}):
     )
 
     if "com_google_protobuf" not in native.existing_rules():
-        git_repository(
+        http_archive(
             name = "com_google_protobuf",
-            remote = "https://github.com/protocolbuffers/protobuf",
-            # Release v3.19.4.
-            # TODO(codingcanuck): Update to a newer release after
-            # https://github.com/protocolbuffers/protobuf/issues/9688 is fixed.
-            commit = "22d0e265de7d2b3d2e9a00d071313502e7d4cccf",
-            shallow_since = "1643340956 -0800",
+            sha256 = "008a11cc56f9b96679b4c285fd05f46d317d685be3ab524b2a310be0fbad987e",
+            strip_prefix = "protobuf-29.3",
+            urls = [
+                "https://github.com/protocolbuffers/protobuf/archive/v29.3.tar.gz",
+            ],
             repo_mapping = repo_mapping,
         )
 
