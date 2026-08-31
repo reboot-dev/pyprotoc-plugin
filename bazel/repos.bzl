@@ -31,6 +31,21 @@ def repos(external = True, repo_mapping = {}):
         repo_mapping = repo_mapping,
     )
 
+    # Bazel 8's WORKSPACE suffix runs
+    # `@rules_java//java:rules_java_deps.bzl%rules_java_dependencies`,
+    # which only exists from `rules_java` 8.0.0 on, and `protobuf_deps()`
+    # would otherwise claim the name for 7.12.2. 8.12.0 is the version
+    # Bazel 8.7.0's own suffix declares; 8.16.1 does not work, as its
+    # `rules_java_deps.bzl` `load()`s `@bazel_features`, which nothing
+    # declares before the suffix runs.
+    maybe(
+        http_archive,
+        name = "rules_java",
+        sha256 = "1558508fc6c348d7f99477bd21681e5746936f15f0436b5f4233e30832a590f9",
+        url = "https://github.com/bazelbuild/rules_java/releases/download/8.12.0/rules_java-8.12.0.tar.gz",
+        repo_mapping = repo_mapping,
+    )
+
     if "com_google_protobuf" not in native.existing_rules():
         git_repository(
             name = "com_google_protobuf",
