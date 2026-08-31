@@ -1,3 +1,8 @@
+# Bazel 8 enables Bzlmod and disables `WORKSPACE` by default. We are
+# not ready to migrate to Bzlmod, so keep using `WORKSPACE`.
+common --enable_bzlmod=false
+common --enable_workspace=true
+
 # Use a remote build cache that's world-readable. Don't write unless told otherwise.
 
 build --remote_cache=https://storage.googleapis.com/reboot-dev-bazel-remote-cache-reboot-us
